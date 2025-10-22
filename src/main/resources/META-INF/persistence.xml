@@ -1,0 +1,23 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+    <persistence-unit name="geoPU" transaction-type="JTA">
+        <jta-data-source>jdbc/postgresDS</jta-data-source>
+
+        <!-- Либо перечисляй классы, ЛИБО полагайся на авто-сканирование -->
+        <class>org.geodispatch.entity.GeoZone</class>
+        <class>org.geodispatch.entity.JobOrder</class>
+        <class>org.geodispatch.entity.TrackerPing</class>
+        <class>org.geodispatch.entity.Vehicle</class>
+        <class>org.geodispatch.entity.ZoneVisit</class>
+        <!-- Если названия пакетов у тебя не org.geodispatch.entity, поправь под реальный пакет! -->
+
+        <properties>
+            <!-- Схему JPA не трогает: миграции делает Liquibase -->
+            <property name="eclipselink.ddl-generation" value="none"/>
+            <property name="eclipselink.target-database" value="PostgreSQL"/>
+
+            <!-- Логи — на время разработки -->
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

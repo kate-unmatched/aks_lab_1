@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/changes/0001-init-schema.yaml
+  - include:
+      file: liquibase/changes/0002-seed-dev.yaml

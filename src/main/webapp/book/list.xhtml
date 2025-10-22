@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="https://jakarta.ee/xml/ns/jakartaee"
+      xmlns:f="https://jakarta.ee/xml/ns/jakartaee">
+<h:head><title>Книги</title></h:head>
+<h:body>
+    <h1>Книги</h1>
+    <h:form>
+        <h:commandLink value="Добавить" action="#{bookBean.create}"/>
+        <h:dataTable value="#{bookBean.all}" var="b" border="1">
+            <h:column><f:facet name="header">ID</f:facet>#{b.id}</h:column>
+            <h:column><f:facet name="header">Название</f:facet>#{b.title}</h:column>
+            <h:column><f:facet name="header">Год</f:facet>#{b.pubYear}</h:column>
+            <h:column><f:facet name="header">Автор</f:facet>#{b.author.fullName}</h:column>
+            <h:column>
+                <h:commandLink value="Редактировать" action="#{bookBean.edit(b.id)}"/>
+                |
+                <h:commandLink value="Удалить" action="#{bookBean.delete(b.id)}"/>
+            </h:column>
+        </h:dataTable>
+        <h:link outcome="/index.xhtml" value="Назад"/>
+    </h:form>
+</h:body>
+</html>

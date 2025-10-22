@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="https://jakarta.ee/xml/ns/jakartaee"
+      xmlns:f="https://jakarta.ee/xml/ns/jakartaee">
+<h:head><title>Library</title></h:head>
+<h:body>
+    <h1>Library</h1>
+
+    <h2>Авторы</h2>
+    <h:dataTable value="#{authorBean.all}" var="a" border="1">
+        <h:column><f:facet name="header">ID</f:facet>#{a.id}</h:column>
+        <h:column><f:facet name="header">Имя</f:facet>#{a.fullName}</h:column>
+    </h:dataTable>
+
+    <h2>Книги</h2>
+    <h:dataTable value="#{bookBean.all}" var="b" border="1">
+        <h:column><f:facet name="header">ID</f:facet>#{b.id}</h:column>
+        <h:column><f:facet name="header">Название</f:facet>#{b.title}</h:column>
+        <h:column><f:facet name="header">Год</f:facet>#{b.pubYear}</h:column>
+        <h:column><f:facet name="header">Автор</f:facet>#{b.author.fullName}</h:column>
+    </h:dataTable>
+</h:body>
+</html>
