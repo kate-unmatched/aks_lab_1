@@ -146,4 +146,77 @@ public class GeoZoneService {
         double c = 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));
         return R * c;
     }
+
+    /**
+     * Адаптивно подстраивает радиус зоны по истории пингов:
+     * вычисляет среднее расстояние до точки по последним ping'ам машины,
+     * отбрасывает выбросы и обновляет радиус с безопасным коэффициентом.
+     */
+    public GeoZone retuneRadius(long zoneId,
+                                int lookbackDays,
+                                double quantile,
+                                double safetyMarginMeters,
+                                double minRadiusMeters,
+                                double maxRadiusMeters,
+                                double emaAlpha) {
+
+        GeoZone zone = getOrThrow(zoneId);
+
+        // 1️⃣ Берём пинги, которые попадают в окрестность зоны
+        double lat = zone.getLatitude();
+        double lon = zone.getLongitude();
+        double km = (zone.getRadiusMeters() + 50.0) / 1000.0; // зона + запас 50 м
+        double latDelta = km / 111.0;
+        double lonDelta = km / (111.0 * Math.cos(Math.toRadians(lat)));
+
+        java.time.Instant since = java.time.Instant.now().minus(java.time.Duration.ofDays(lookbackDays));
+
+        List<Double> distances = em.createQuery("""
+            select sqrt(
+                pow(111320 * (tp.latitude - :lat), 2) +
+                pow(111320 * cos(radians(:lat)) * (tp.longitude - :lon), 2)
+            )
+            from TrackerPing tp
+            where tp.timestamp >= :since
+              and tp.latitude  between :latMin and :latMax
+              and tp.longitude between :lonMin and :lonMax
+            """, Double.class)
+                .setParameter("lat", lat)
+                .setParameter("lon", lon)
+                .setParameter("since", since)
+                .setParameter("latMin", lat - latDelta)
+                .setParameter("latMax", lat + latDelta)
+                .setParameter("lonMin", lon - lonDelta)
+                .setParameter("lonMax", lon + lonDelta)
+                .getResultList();
+
+        if (distances.isEmpty()) return zone;
+
+        // Отсекаем выбросы по грубой медиане
+        distances.sort(Double::compareTo);
+        double median = distances.get(distances.size() / 2);
+        double mad = distances.stream().mapToDouble(d -> Math.abs(d - median)).average().orElse(0);
+        double cutoff = median + 3 * mad;
+        List<Double> filtered = distances.stream().filter(d -> d <= cutoff).toList();
+        if (filtered.isEmpty()) filtered = distances;
+
+        // Берём квантиль (например, 0.9)
+        double newRadius = percentile(filtered, quantile) + safetyMarginMeters;
+
+        // Ограничения min/max и экспоненциальное сглаживание
+        newRadius = Math.max(minRadiusMeters, Math.min(maxRadiusMeters, newRadius));
+        double smoothed = zone.getRadiusMeters() + emaAlpha * (newRadius - zone.getRadiusMeters());
+
+        zone.setRadiusMeters(smoothed);
+        return zone;
+    }
+
+    private static double percentile(List<Double> sorted, double q) {
+        if (sorted.isEmpty()) return 0;
+        int n = sorted.size();
+        int idx = (int) Math.floor(q * (n - 1));
+        if (idx < 0) idx = 0;
+        if (idx >= n) idx = n - 1;
+        return sorted.get(idx);
+    }
 }
