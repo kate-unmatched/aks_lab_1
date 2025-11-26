@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.example</groupId>
     <artifactId>aks-lab-1</artifactId>
     <version>1.0.0</version>
@@ -14,7 +15,12 @@
         <jakartaee.version>10.0.0</jakartaee.version>
     </properties>
 
+    <!-- ========================= -->
+    <!--       PROJECT DEPENDENCIES -->
+    <!-- ========================= -->
     <dependencies>
+
+        <!-- JakartaEE API -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -22,20 +28,23 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.4</version>
-            <scope>provided</scope>
+            <scope>runtime</scope>
         </dependency>
 
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <artifactId>Lombok</artifactId>
             <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
 
+        <!-- Liquibase -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -44,9 +53,14 @@
 
     </dependencies>
 
+    <!-- ============ -->
+    <!--    BUILD     -->
+    <!-- ============ -->
     <build>
         <finalName>aks-lab-1</finalName>
+
         <plugins>
+            <!-- WAR Plugin -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
@@ -54,6 +68,8 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+
+            <!-- Liquibase Plugin -->
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
@@ -63,6 +79,7 @@
                     <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                     <logging>info</logging>
                 </configuration>
+                <!-- ВАЖНО: зависимости плагина — только для liquibase -->
                 <dependencies>
                     <dependency>
                         <groupId>org.postgresql</groupId>
@@ -73,4 +90,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

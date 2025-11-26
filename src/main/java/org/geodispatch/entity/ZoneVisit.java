@@ -10,20 +10,13 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 @Table(name = "zone_visit",
-       indexes = {
-           @Index(name = "idx_visit_vehicle_zone", columnList = "vehicle_id, zone_id"),
-           @Index(name = "idx_visit_order", columnList = "job_order_id")
-       })
-public class ZoneVisit {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
-    private Long id;
+        indexes = {
+                @Index(name = "idx_visit_vehicle_zone", columnList = "vehicle_id, zone_id"),
+                @Index(name = "idx_visit_order", columnList = "job_order_id")
+        })
+public class ZoneVisit extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Vehicle vehicle;
@@ -42,9 +35,5 @@ public class ZoneVisit {
     private Instant leftAt;
 
     @Column(nullable = false)
-    @ToString.Include
     private boolean confirmed = false;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
 }

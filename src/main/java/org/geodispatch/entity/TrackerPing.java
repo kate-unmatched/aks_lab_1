@@ -10,26 +10,18 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 @Table(name = "tracker_ping",
-       indexes = {
-           @Index(name = "idx_ping_vehicle_time", columnList = "vehicle_id, timestamp"),
-           @Index(name = "idx_ping_lat_lon", columnList = "latitude, longitude")
-       })
-public class TrackerPing {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
-    private Long id;
+        indexes = {
+                @Index(name = "idx_ping_vehicle_time", columnList = "vehicle_id, timestamp"),
+                @Index(name = "idx_ping_lat_lon", columnList = "latitude, longitude")
+        })
+public class TrackerPing extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Vehicle vehicle;
 
     @Column(nullable = false)
-    @ToString.Include
     private Instant timestamp;
 
     @Column(nullable = false)
@@ -43,7 +35,4 @@ public class TrackerPing {
 
     @Column(name = "heading_deg")
     private Double headingDegrees;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
 }

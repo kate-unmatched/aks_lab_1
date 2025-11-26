@@ -4,32 +4,27 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.time.Instant;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 @Table(name = "geo_zone",
         indexes = {
                 @Index(name = "idx_zone_name", columnList = "name"),
                 @Index(name = "idx_zone_lat_lon", columnList = "latitude, longitude")
         })
-public class GeoZone {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
-    private Long id;
+public class GeoZone extends BaseEntity {
 
     @NotBlank
     @Size(max = 128)
     @Column(nullable = false, unique = true, length = 128)
-    @ToString.Include
     private String name;
 
     @Column(nullable = false)
@@ -41,7 +36,6 @@ public class GeoZone {
     @Positive
     @Column(name = "radius_meters", nullable = false)
     private double radiusMeters;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
 }
+
+
