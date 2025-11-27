@@ -1,13 +1,13 @@
-package org.geodispatch.services;
+package org.geodispatch.service.vehicle;
 
 import jakarta.ejb.Stateless;
 import org.geodispatch.entity.Vehicle;
-import org.geodispatch.services.base.GenericCrudServiceImpl;
+import org.geodispatch.service.base.CrudServiceImpl;
 
 import java.util.List;
 
 @Stateless
-public class VehicleServiceImpl extends GenericCrudServiceImpl<Vehicle> implements VehicleService {
+public class VehicleServiceImpl extends CrudServiceImpl<Vehicle> implements VehicleService {
 
     public VehicleServiceImpl() {
         super(Vehicle.class);

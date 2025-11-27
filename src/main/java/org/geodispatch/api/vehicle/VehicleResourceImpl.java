@@ -1,24 +1,23 @@
-package org.geodispatch.api;
+package org.geodispatch.api.vehicle;
 
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.core.Response;
 
+import org.geodispatch.api.base.AbstractCrudResource;
 import org.geodispatch.entity.Vehicle;
 import org.geodispatch.entity.TrackerPing;
-import org.geodispatch.services.TrackerPingService;
-import org.geodispatch.services.VehicleService;
-import org.geodispatch.services.base.CrudService;
+import org.geodispatch.service.ping.TrackerPingService;
+import org.geodispatch.service.vehicle.VehicleService;
+import org.geodispatch.service.base.CrudService;
 
 
 import java.util.Comparator;
 import java.util.List;
 
-public class VehicleResourceImpl extends AbstractCrudResource<Vehicle>
-        implements VehicleResource {
+public class VehicleResourceImpl extends AbstractCrudResource<Vehicle> implements VehicleResource {
 
     @EJB
     private VehicleService vehicleService;
-
     @EJB
     private TrackerPingService pingService;
 
@@ -33,8 +32,6 @@ public class VehicleResourceImpl extends AbstractCrudResource<Vehicle>
         existing.setModel(newData.getModel());
         existing.setManufacturer(newData.getManufacturer());
     }
-
-    // EXTRA
 
     @Override
     public List<Vehicle> getActiveVehicles() {

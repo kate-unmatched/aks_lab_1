@@ -1,8 +1,8 @@
-package org.geodispatch.api;
+package org.geodispatch.api.base;
 
 import jakarta.ws.rs.core.Response;
 import org.geodispatch.entity.BaseEntity;
-import org.geodispatch.services.base.CrudService;
+import org.geodispatch.service.base.CrudService;
 
 
 import java.util.List;

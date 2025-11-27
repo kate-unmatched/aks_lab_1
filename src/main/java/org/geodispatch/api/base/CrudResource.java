@@ -1,4 +1,4 @@
-package org.geodispatch.api;
+package org.geodispatch.api.base;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;

@@ -1,7 +1,8 @@
-package org.geodispatch.api;
+package org.geodispatch.api.vehicle;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import org.geodispatch.api.base.CrudResource;
 import org.geodispatch.entity.TrackerPing;
 import org.geodispatch.entity.Vehicle;
 import java.util.List;
