@@ -4,17 +4,18 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper = true)
 @Table(name = "vehicle",
         indexes = @Index(name = "idx_vehicle_plate", columnList = "registration_plate"))
-public class Vehicle extends BaseEntity {
+public class Vehicle extends BaseEntity{
 
     @NotBlank
     @Size(max = 32)

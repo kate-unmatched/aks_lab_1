@@ -1,7 +1,6 @@
-package org.geodispatch.service.vehicle;
+package org.geodispatch.service;
 
 import org.geodispatch.entity.Vehicle;
-import org.geodispatch.service.base.CrudService;
 
 import java.util.List;
 

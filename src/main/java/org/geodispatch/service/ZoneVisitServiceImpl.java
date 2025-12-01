@@ -1,12 +1,12 @@
-package org.geodispatch.service.visit;
+package org.geodispatch.service;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.TypedQuery;
 
 import org.geodispatch.entity.ZoneVisit;
-import org.geodispatch.service.base.CrudServiceImpl;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateless
@@ -47,7 +47,7 @@ public class ZoneVisitServiceImpl extends CrudServiceImpl<ZoneVisit> implements 
     }
 
     @Override
-    public ZoneVisit enter(Long visitId, Instant timestamp) {
+    public ZoneVisit enter(Long visitId, LocalDateTime timestamp) {
         ZoneVisit v = findById(visitId);
         if (v == null) return null;
 
@@ -56,7 +56,7 @@ public class ZoneVisitServiceImpl extends CrudServiceImpl<ZoneVisit> implements 
     }
 
     @Override
-    public ZoneVisit leave(Long visitId, Instant timestamp) {
+    public ZoneVisit leave(Long visitId, LocalDateTime timestamp) {
         ZoneVisit v = findById(visitId);
         if (v == null) return null;
 

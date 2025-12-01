@@ -1,8 +1,7 @@
-package org.geodispatch.service.vehicle;
+package org.geodispatch.service;
 
 import jakarta.ejb.Stateless;
 import org.geodispatch.entity.Vehicle;
-import org.geodispatch.service.base.CrudServiceImpl;
 
 import java.util.List;
 

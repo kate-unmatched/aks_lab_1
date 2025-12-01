@@ -1,23 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="https://jakarta.ee/xml/ns/jakartaee"
-      xmlns:f="https://jakarta.ee/xml/ns/jakartaee">
-<h:head><title>Library</title></h:head>
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>GeoDispatch — API Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f7;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .api-card {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        a.api-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 18px;
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        a.api-link:hover {
+            background: #0056c7;
+        }
+    </style>
+</h:head>
+
 <h:body>
-    <h1>Library</h1>
 
-    <h2>Авторы</h2>
-    <h:dataTable value="#{authorBean.all}" var="a" border="1">
-        <h:column><f:facet name="header">ID</f:facet>#{a.id}</h:column>
-        <h:column><f:facet name="header">Имя</f:facet>#{a.fullName}</h:column>
-    </h:dataTable>
+    <h1>GeoDispatch — API Dashboard</h1>
 
-    <h2>Книги</h2>
-    <h:dataTable value="#{bookBean.all}" var="b" border="1">
-        <h:column><f:facet name="header">ID</f:facet>#{b.id}</h:column>
-        <h:column><f:facet name="header">Название</f:facet>#{b.title}</h:column>
-        <h:column><f:facet name="header">Год</f:facet>#{b.pubYear}</h:column>
-        <h:column><f:facet name="header">Автор</f:facet>#{b.author.fullName}</h:column>
-    </h:dataTable>
+    <div class="api-grid">
+
+        <div class="api-card">
+            <h3>Vehicles</h3>
+            <p>Retrieve all registered vehicles.</p>
+            <a class="api-link" href="/aks-lab-1/api/v1/vehicles" target="_blank">GET /vehicles</a>
+            <a class="api-link" href="/aks-lab-1/api/v1/vehicles/active" target="_blank">GET /vehicles/active</a>
+        </div>
+
+        <div class="api-card">
+            <h3>Geo Zones</h3>
+            <p>List of all configured geo-fenced areas.</p>
+            <a class="api-link" href="/aks-lab-1/api/v1/zones" target="_blank">GET /zones</a>
+        </div>
+
+        <div class="api-card">
+            <h3>Job Orders</h3>
+            <p>Retrieve all dispatch job orders.</p>
+            <a class="api-link" href="/aks-lab-1/api/v1/orders" target="_blank">GET /orders</a>
+        </div>
+
+        <div class="api-card">
+            <h3>Tracker Pings</h3>
+            <p>Latest GPS pings from all vehicles.</p>
+            <a class="api-link" href="/aks-lab-1/api/v1/pings" target="_blank">GET /pings</a>
+        </div>
+
+        <div class="api-card">
+            <h3>Zone Visits</h3>
+            <p>Vehicle visits to geo-zones.</p>
+            <a class="api-link" href="/aks-lab-1/api/v1/visits" target="_blank">GET /visits</a>
+        </div>
+
+    </div>
+
 </h:body>
 </html>

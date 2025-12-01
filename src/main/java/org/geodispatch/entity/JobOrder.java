@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -32,8 +33,8 @@ public class JobOrder extends BaseEntity {
     private GeoZone plannedZone;
 
     @Column(name = "started_at")
-    private Instant startedAt;
+    private LocalDateTime startedAt;
 
     @Column(name = "completed_at")
-    private Instant completedAt;
+    private LocalDateTime completedAt;
 }

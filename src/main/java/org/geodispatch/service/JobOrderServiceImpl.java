@@ -1,12 +1,12 @@
-package org.geodispatch.service.order;
+package org.geodispatch.service;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.TypedQuery;
 
 import org.geodispatch.entity.JobOrder;
-import org.geodispatch.service.base.CrudServiceImpl;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateless
@@ -52,7 +52,7 @@ public class JobOrderServiceImpl extends CrudServiceImpl<JobOrder> implements Jo
         if (o == null) return null;
 
         o.setStatus(JobOrder.Status.IN_PROGRESS);
-        o.setStartedAt(Instant.now());
+        o.setStartedAt(LocalDateTime.now());
 
         return update(o);
     }
@@ -63,7 +63,7 @@ public class JobOrderServiceImpl extends CrudServiceImpl<JobOrder> implements Jo
         if (o == null) return null;
 
         o.setStatus(JobOrder.Status.COMPLETED);
-        o.setCompletedAt(Instant.now());
+        o.setCompletedAt(LocalDateTime.now());
 
         return update(o);
     }

@@ -1,4 +1,4 @@
-package org.geodispatch.service.base;
+package org.geodispatch.service;
 
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -8,7 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import org.geodispatch.entity.BaseEntity;
 
 import java.util.List;
-
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public abstract class CrudServiceImpl<T extends BaseEntity> implements CrudService<T> {
 
     @PersistenceContext(unitName = "geoPU")
@@ -21,7 +21,6 @@ public abstract class CrudServiceImpl<T extends BaseEntity> implements CrudServi
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T create(T entity) {
         return em.merge(entity);
     }
@@ -38,13 +37,11 @@ public abstract class CrudServiceImpl<T extends BaseEntity> implements CrudServi
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T update(T entity) {
         return em.merge(entity);
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void delete(Long id) {
         T entity = findById(id);
         if (entity != null) {

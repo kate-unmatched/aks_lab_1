@@ -1,9 +1,12 @@
 package org.geodispatch.entity;
 
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,11 +21,13 @@ import java.time.Instant;
         })
 public class TrackerPing extends BaseEntity {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicle_id")
+    @JsonbTransient
     private Vehicle vehicle;
 
     @Column(nullable = false)
-    private Instant timestamp;
+    private LocalDateTime timestamp;
 
     @Column(nullable = false)
     private double latitude;
@@ -35,4 +40,17 @@ public class TrackerPing extends BaseEntity {
 
     @Column(name = "heading_deg")
     private Double headingDegrees;
+
+    @JsonbProperty("vehicleId")
+    public Long getVehicleId() {
+        return vehicle != null ? vehicle.getId() : null;
+    }
+
+    @JsonbProperty("vehicleId")
+    public void setVehicleId(Long vehicleId) {
+        if (vehicleId != null) {
+            this.vehicle = new Vehicle();
+            this.vehicle.setId(vehicleId);
+        }
+    }
 }

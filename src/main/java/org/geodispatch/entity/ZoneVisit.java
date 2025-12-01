@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,10 +30,10 @@ public class ZoneVisit extends BaseEntity {
     private JobOrder jobOrder;
 
     @Column(name = "entered_at")
-    private Instant enteredAt;
+    private LocalDateTime enteredAt;
 
     @Column(name = "left_at")
-    private Instant leftAt;
+    private LocalDateTime leftAt;
 
     @Column(nullable = false)
     private boolean confirmed = false;

@@ -1,7 +1,6 @@
-package org.geodispatch.service.order;
+package org.geodispatch.service;
 
 import org.geodispatch.entity.JobOrder;
-import org.geodispatch.service.base.CrudService;
 
 import java.util.List;
 

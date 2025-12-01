@@ -1,9 +1,9 @@
-package org.geodispatch.service.visit;
+package org.geodispatch.service;
 
 import org.geodispatch.entity.ZoneVisit;
-import org.geodispatch.service.base.CrudService;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public interface ZoneVisitService extends CrudService<ZoneVisit> {
      * @param timestamp time of zone entry
      * @return updated visit or null if not found
      */
-    ZoneVisit enter(Long visitId, Instant timestamp);
+    ZoneVisit enter(Long visitId, LocalDateTime timestamp);
 
     /**
      * Marks the visit as finished (vehicle left the zone).
@@ -51,7 +51,7 @@ public interface ZoneVisitService extends CrudService<ZoneVisit> {
      * @param timestamp time of leaving
      * @return updated visit or null if not found
      */
-    ZoneVisit leave(Long visitId, Instant timestamp);
+    ZoneVisit leave(Long visitId, LocalDateTime timestamp);
 
     /**
      * Confirms this visit as valid.

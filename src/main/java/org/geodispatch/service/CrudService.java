@@ -1,4 +1,4 @@
-package org.geodispatch.service.base;
+package org.geodispatch.service;
 
 import org.geodispatch.entity.BaseEntity;
 
