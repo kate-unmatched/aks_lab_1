@@ -1,60 +1,34 @@
 package org.geodispatch.api;
 
-import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.geodispatch.entity.TrackerPing;
-import org.geodispatch.service.TrackerPingService;
-
-import java.util.List;
 
 @Path("/pings")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TrackerPingApi {
-
-    @EJB
-    private TrackerPingService service;
+public interface TrackerPingApi {
 
     @GET
-    public Response findAll() {
-        return Response.ok(service.findAll()).build();
-    }
+    Response findAll();
 
     @GET
     @Path("/{id}")
-    public Response findById(@PathParam("id") Long id) {
-        TrackerPing ping = service.findById(id);
-        return ping != null ? Response.ok(ping).build()
-                            : Response.status(Response.Status.NOT_FOUND).build();
-    }
+    Response findById(@PathParam("id") Long id);
 
     @GET
     @Path("/vehicle/{vehicleId}")
-    public Response findByVehicle(@PathParam("vehicleId") Long vehicleId) {
-        List<TrackerPing> list = service.findByVehicle(vehicleId);
-        return Response.ok(list).build();
-    }
+    Response findByVehicle(@PathParam("vehicleId") Long vehicleId);
 
     @GET
     @Path("/vehicle/{vehicleId}/last")
-    public Response lastPing(@PathParam("vehicleId") Long vehicleId) {
-        TrackerPing ping = service.findLastPing(vehicleId);
-        return ping != null ? Response.ok(ping).build()
-                            : Response.status(Response.Status.NOT_FOUND).build();
-    }
+    Response lastPing(@PathParam("vehicleId") Long vehicleId);
 
     @POST
-    public Response create(TrackerPing ping) {
-        TrackerPing created = service.create(ping);
-        return Response.status(Response.Status.CREATED).entity(created).build();
-    }
+    Response create(TrackerPing ping);
 
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") Long id) {
-        service.delete(id);
-        return Response.noContent().build();
-    }
+    Response delete(@PathParam("id") Long id);
 }

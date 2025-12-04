@@ -1,5 +1,7 @@
 package org.geodispatch.service;
 
+import org.geodispatch.dtos.ZoneStatsDTO;
+import org.geodispatch.dtos.ZoneVisitZoneStatsDTO;
 import org.geodispatch.entity.ZoneVisit;
 
 import java.time.Instant;
@@ -60,4 +62,10 @@ public interface ZoneVisitService extends CrudService<ZoneVisit> {
      * @return updated visit or null if not found
      */
     ZoneVisit confirm(Long visitId);
+
+    ZoneVisit findLastByVehicle(Long vehicleId);
+
+    ZoneVisitZoneStatsDTO getZoneStats(Long zoneId);
+
+    List<ZoneStatsDTO> getAllZonesStats();
 }

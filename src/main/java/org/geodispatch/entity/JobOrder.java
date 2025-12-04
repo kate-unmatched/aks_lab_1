@@ -1,5 +1,9 @@
 package org.geodispatch.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +21,13 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_order_vehicle", columnList = "vehicle_id"),
                 @Index(name = "idx_order_status", columnList = "status")
         })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class JobOrder extends BaseEntity {
 
     public enum Status { PLANNED, IN_PROGRESS, COMPLETED }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonbTransient
     private Vehicle vehicle;
 
     @Enumerated(EnumType.STRING)
@@ -30,6 +36,7 @@ public class JobOrder extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planned_zone_id")
+    @JsonbTransient
     private GeoZone plannedZone;
 
     @Column(name = "started_at")
@@ -37,4 +44,11 @@ public class JobOrder extends BaseEntity {
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Transient
+    private Long vehicleId;
+
+    @Transient
+    private Long plannedZoneId;
+
 }

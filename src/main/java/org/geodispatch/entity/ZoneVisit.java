@@ -1,9 +1,9 @@
 package org.geodispatch.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,13 +20,16 @@ import java.time.LocalDateTime;
 public class ZoneVisit extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonbTransient
     private Vehicle vehicle;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonbTransient
     private GeoZone zone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_order_id")
+    @JsonbTransient
     private JobOrder jobOrder;
 
     @Column(name = "entered_at")

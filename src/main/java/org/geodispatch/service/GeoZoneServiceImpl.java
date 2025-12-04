@@ -72,5 +72,6 @@ public class GeoZoneServiceImpl extends CrudServiceImpl<GeoZone> implements GeoZ
 
         return R * c;
     }
+
 }
 
