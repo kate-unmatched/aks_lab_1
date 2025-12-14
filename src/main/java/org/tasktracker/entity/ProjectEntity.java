@@ -4,11 +4,14 @@ import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "projects", schema = "tasktracker")
 public class ProjectEntity extends BaseEntity {
@@ -23,7 +26,7 @@ public class ProjectEntity extends BaseEntity {
     private LocalDateTime createdAt;
 
     @JsonbTransient
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany
     private List<TaskEntity> tasks;
 
 }
