@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - property:
+      name: schemaName
+      value: tasktracker
+  - include:
+      file: db/changelog/001-create-projects.yaml
+  - include:
+      file: db/changelog/002-create-users.yaml
+  - include:
+      file: db/changelog/003-create-tasks.yaml
+  - include:
+      file: db/changelog/004-insert-initial-data.yaml

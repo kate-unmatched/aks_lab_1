@@ -2,47 +2,69 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GeoDispatch — Панель</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Task Tracker</title>
 </head>
 <body>
 
-<h1>GeoDispatch</h1>
-<p class="subtitle">Мониторинг транспорта и геозон</p>
+<h1>Task Tracker</h1>
+<p>Jakarta EE demo application</p>
 
-<div class="grid">
+<hr>
 
-    <div class="card">
-        <h2>Транспорт</h2>
-        <p>Просмотр списка машин и активности.</p>
-        <a href="vehicles.html">Перейти</a>
-    </div>
+<h2>Основные сценарии</h2>
 
-    <div class="card">
-        <h2>Геозоны</h2>
-        <p>Создание и анализ зон.</p>
-        <a href="zones.html">Перейти</a>
-    </div>
+<ul>
+    <li>
+        <strong>Пользователи</strong>
+        <ul>
+            <li><a href="api/v1/users" target="_blank">Просмотреть всех пользователей</a></li>
+        </ul>
+    </li>
 
-    <div class="card">
-        <h2>Задачи</h2>
-        <p>Назначение и контроль выполнения заказов.</p>
-        <a href="orders.html">Перейти</a>
-    </div>
+    <li>
+        <strong>Проекты</strong>
+        <ul>
+            <li><a href="api/v1/projects" target="_blank">Просмотреть все проекты</a></li>
+        </ul>
+    </li>
 
-    <div class="card">
-        <h2>Пинги</h2>
-        <p>Последние GPS-координаты транспорта.</p>
-        <a href="pings.html">Перейти</a>
-    </div>
+    <li>
+        <strong>Задачи</strong>
+        <ul>
+            <li><a href="api/v1/tasks" target="_blank">Просмотреть все задачи</a></li>
+            <li><a href="api/v1/tasks/statuses" target="_blank">Доступные статусы задач</a></li>
+        </ul>
+    </li>
+</ul>
 
-    <div class="card">
-        <h2>Посещения зон</h2>
-        <p>Фиксация входов и выходов транспорта.</p>
-        <a href="visits.html">Перейти</a>
-    </div>
+<hr>
 
-</div>
+<h2>Создание сущностей</h2>
+
+<p>
+    Создание выполняется через REST API (POST-запросы).
+    Для демонстрации можно использовать Postman или curl.
+</p>
+
+<ul>
+    <li><code>POST /api/users</code></li>
+    <li><code>POST /api/projects</code></li>
+    <li><code>POST /api/tasks</code></li>
+</ul>
+
+<hr>
+
+<h2>Описание сценариев</h2>
+
+<ol>
+    <li>Пользователь открывает стартовую страницу</li>
+    <li>Просматривает список задач</li>
+    <li>Создаёт новую задачу</li>
+    <li>Изменяет статус задачи</li>
+    <li>Удаляет задачу</li>
+</ol>
+
+<hr>
 
 </body>
 </html>

@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-insert-initial-data
+      author: Ekaterina Marchenko
+      context: dev
+
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+              tableName: projects
+              schemaName: ${schemaName}
+        - tableExists:
+              tableName: tasks
+              schemaName: ${schemaName}
+        - tableExists:
+              tableName: users
+              schemaName: ${schemaName}
+
+      changes:
+
+        # Projects
+        - insert:
+            schemaName: tasktracker
+            tableName: projects
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: "Internal project"
+              - column:
+                  name: description
+                  value: "Internal task tracker project"
+              - column:
+                  name: created_at
+                  valueDate: "2025-01-01T10:00:00"
+
+        # Users
+        - insert:
+            schemaName: tasktracker
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: full_name
+                  value: "Ivan Ivanov"
+              - column:
+                  name: email
+                  value: "ivan.ivanov@example.com"
+
+        - insert:
+            schemaName: tasktracker
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: full_name
+                  value: "Maria Petrova"
+              - column:
+                  name: email
+                  value: "maria.petrova@example.com"
+
+        # Tasks
+        - insert:
+            schemaName: tasktracker
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: title
+                  value: "Design database schema"
+              - column:
+                  name: description
+                  value: "Create initial DB schema for task tracker"
+              - column:
+                  name: status
+                  value: "NEW"
+              - column:
+                  name: due_date
+                  valueDate: "2025-01-10"
+              - column:
+                  name: created_at
+                  valueDate: "2025-01-01T11:00:00"
+              - column:
+                  name: project_id
+                  valueNumeric: 1
+              - column:
+                  name: assignee_id
+                  valueNumeric: 1
+
+        - insert:
+            schemaName: tasktracker
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: title
+                  value: "Implement REST API"
+              - column:
+                  name: description
+                  value: "Create CRUD REST endpoints"
+              - column:
+                  name: status
+                  value: "IN_PROGRESS"
+              - column:
+                  name: due_date
+                  valueDate: "2025-01-15"
+              - column:
+                  name: created_at
+                  valueDate: "2025-01-02T09:30:00"
+              - column:
+                  name: project_id
+                  valueNumeric: 1
+              - column:
+                  name: assignee_id
+                  valueNumeric: 2
