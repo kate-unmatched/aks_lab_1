@@ -3,68 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <title>Task Tracker</title>
+
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --primary: #4f46e5;
+            --danger: #dc2626;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            margin-top: 0;
+            color: var(--muted);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        button.secondary {
+            background: #e5e7eb;
+        }
+
+        button.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .item-title {
+            cursor: pointer;
+        }
+
+        .actions button {
+            margin-left: 6px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 
 <h1>Task Tracker</h1>
-<p>Jakarta EE demo application</p>
+<p class="subtitle">Jakarta EE application</p>
 
-<hr>
+<div class="layout">
 
-<h2>Основные сценарии</h2>
+    <!-- ================= PROJECTS ================= -->
 
-<ul>
-    <li>
-        <strong>Пользователи</strong>
-        <ul>
-            <li><a href="api/v1/users" target="_blank">Просмотреть всех пользователей</a></li>
-        </ul>
-    </li>
+    <div class="card">
+        <h2>Проекты</h2>
 
-    <li>
-        <strong>Проекты</strong>
-        <ul>
-            <li><a href="api/v1/projects" target="_blank">Просмотреть все проекты</a></li>
-        </ul>
-    </li>
+        <input type="hidden" id="projectId">
 
-    <li>
-        <strong>Задачи</strong>
-        <ul>
-            <li><a href="api/v1/tasks" target="_blank">Просмотреть все задачи</a></li>
-            <li><a href="api/v1/tasks/statuses" target="_blank">Доступные статусы задач</a></li>
-        </ul>
-    </li>
-</ul>
+        <div class="form">
+            <input id="projectName" placeholder="Название проекта">
+            <input id="projectDescription" placeholder="Описание">
+            <button class="primary" onclick="saveProject()">Сохранить</button>
+            <button class="secondary" onclick="resetProject()">Сброс</button>
+        </div>
 
-<hr>
+        <ul id="projects"></ul>
+    </div>
 
-<h2>Создание сущностей</h2>
+    <!-- ================= USERS ================= -->
 
-<p>
-    Создание выполняется через REST API (POST-запросы).
-    Для демонстрации можно использовать Postman или curl.
-</p>
+    <div class="card">
+        <h2>Пользователи</h2>
 
-<ul>
-    <li><code>POST /api/users</code></li>
-    <li><code>POST /api/projects</code></li>
-    <li><code>POST /api/tasks</code></li>
-</ul>
+        <input type="hidden" id="userId">
 
-<hr>
+        <div class="form">
+            <input id="userFullName" placeholder="Имя">
+            <input id="userEmail" placeholder="Email">
+            <button class="primary" onclick="saveUser()">Сохранить</button>
+            <button class="secondary" onclick="resetUser()">Сброс</button>
+        </div>
 
-<h2>Описание сценариев</h2>
+        <ul id="users"></ul>
+    </div>
 
-<ol>
-    <li>Пользователь открывает стартовую страницу</li>
-    <li>Просматривает список задач</li>
-    <li>Создаёт новую задачу</li>
-    <li>Изменяет статус задачи</li>
-    <li>Удаляет задачу</li>
-</ol>
+</div>
 
-<hr>
+<script>
+    const API = '/aks-lab-1/api/v1';
+
+    /* ---------- PROJECTS ---------- */
+
+    function loadProjects() {
+        fetch(`${API}/projects`)
+            .then(r => r.json())
+            .then(data => {
+                const ul = document.getElementById('projects');
+                ul.innerHTML = '';
+
+                data.forEach(p => {
+                    const li = document.createElement('li');
+
+                    const title = document.createElement('span');
+                    title.className = 'item-title';
+                    title.textContent = p.name;
+                    title.onclick = () => editProject(p);
+
+                    const actions = document.createElement('div');
+                    actions.className = 'actions';
+
+                    const open = document.createElement('button');
+                    open.textContent = 'Открыть';
+                    open.onclick = () =>
+                        window.location.href = `project.html?projectId=${p.id}`;
+
+                    const del = document.createElement('button');
+                    del.textContent = 'Удалить';
+                    del.className = 'danger';
+                    del.onclick = () => deleteProject(p.id);
+
+                    actions.append(open, del);
+                    li.append(title, actions);
+                    ul.appendChild(li);
+                });
+            });
+    }
+
+    function editProject(p) {
+        projectId.value = p.id;
+        projectName.value = p.name;
+        projectDescription.value = p.description || '';
+    }
+
+    function saveProject() {
+        const id = projectId.value;
+        const body = {
+            name: projectName.value,
+            description: projectDescription.value
+        };
+
+        fetch(id ? `${API}/projects/${id}` : `${API}/projects`, {
+            method: id ? 'PUT' : 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        }).then(() => {
+            resetProject();
+            loadProjects();
+        });
+    }
+
+    function deleteProject(id) {
+        fetch(`${API}/projects/${id}`, { method: 'DELETE' })
+            .then(loadProjects);
+    }
+
+    function resetProject() {
+        projectId.value = '';
+        projectName.value = '';
+        projectDescription.value = '';
+    }
+
+    /* ---------- USERS ---------- */
+
+    function loadUsers() {
+        fetch(`${API}/users`)
+            .then(r => r.json())
+            .then(data => {
+                const ul = document.getElementById('users');
+                ul.innerHTML = '';
+
+                data.forEach(u => {
+                    const li = document.createElement('li');
+
+                    const title = document.createElement('span');
+                    title.className = 'item-title';
+                    title.textContent = `${u.fullName} (${u.email})`;
+                    title.onclick = () => editUser(u);
+
+                    const actions = document.createElement('div');
+                    actions.className = 'actions';
+
+                    const del = document.createElement('button');
+                    del.textContent = 'Удалить';
+                    del.className = 'danger';
+                    del.onclick = () => deleteUser(u.id);
+
+                    actions.append(del);
+                    li.append(title, actions);
+                    ul.appendChild(li);
+                });
+            });
+    }
+
+    function editUser(u) {
+        userId.value = u.id;
+        userFullName.value = u.fullName;
+        userEmail.value = u.email;
+    }
+
+    function saveUser() {
+        const id = userId.value;
+        const body = {
+            fullName: userFullName.value,
+            email: userEmail.value
+        };
+
+        fetch(id ? `${API}/users/${id}` : `${API}/users`, {
+            method: id ? 'PUT' : 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        }).then(() => {
+            resetUser();
+            loadUsers();
+        });
+    }
+
+    function deleteUser(id) {
+        fetch(`${API}/users/${id}`, { method: 'DELETE' })
+            .then(loadUsers);
+    }
+
+    function resetUser() {
+        userId.value = '';
+        userFullName.value = '';
+        userEmail.value = '';
+    }
+
+    loadProjects();
+    loadUsers();
+</script>
 
 </body>
 </html>

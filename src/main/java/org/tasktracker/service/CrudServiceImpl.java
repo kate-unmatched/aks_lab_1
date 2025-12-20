@@ -23,7 +23,8 @@ public abstract class CrudServiceImpl<T extends BaseEntity> implements CrudServi
 
     @Override
     public T create(T entity) {
-        return em.merge(entity);
+        em.persist(entity);
+        return entity;
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ProjectEntity extends BaseEntity {
     private LocalDateTime createdAt;
 
     @JsonbTransient
-    @OneToMany
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskEntity> tasks;
 
 }

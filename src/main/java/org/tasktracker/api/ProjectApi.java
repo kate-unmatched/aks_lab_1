@@ -20,6 +20,10 @@ public interface ProjectApi {
     @POST
     Response create(ProjectEntity project);
 
+    @PUT
+    @Path("/{id}")
+    Response update(@PathParam("id") Long id, ProjectEntity project);
+
     @DELETE
     @Path("/{id}")
     Response delete(@PathParam("id") Long id);

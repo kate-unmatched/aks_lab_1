@@ -20,6 +20,10 @@ public interface UserApi {
     @POST
     Response create(UserEntity user);
 
+    @PUT
+    @Path("/{id}")
+    Response update(@PathParam("id") Long id, UserEntity user);
+
     @DELETE
     @Path("/{id}")
     Response delete(@PathParam("id") Long id);

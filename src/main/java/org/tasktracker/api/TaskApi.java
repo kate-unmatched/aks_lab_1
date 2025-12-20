@@ -3,6 +3,8 @@ package org.tasktracker.api;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.tasktracker.dtos.TaskAssigneeUpdateRequest;
+import org.tasktracker.dtos.TaskCreateRequest;
 import org.tasktracker.dtos.TaskStatusUpdateRequest;
 import org.tasktracker.entity.TaskEntity;
 
@@ -19,7 +21,7 @@ public interface TaskApi {
     Response findById(@PathParam("id") Long id);
 
     @POST
-    Response create(TaskEntity task);
+    Response create(TaskCreateRequest tas);
 
     @PUT
     @Path("/{id}/status")
@@ -32,4 +34,9 @@ public interface TaskApi {
     @GET
     @Path("/statuses")
     Response getStatuses();
+
+    @PUT
+    @Path("/{id}/assignee")
+    Response updateAssignee(@PathParam("id") Long id, TaskAssigneeUpdateRequest request);
+
 }

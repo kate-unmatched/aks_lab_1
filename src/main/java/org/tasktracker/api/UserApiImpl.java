@@ -33,6 +33,23 @@ public class UserApiImpl implements UserApi {
     }
 
     @Override
+    public Response update(Long id, UserEntity incoming) {
+        UserEntity existing = service.findById(id);
+
+        if (existing == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("User not found")
+                    .build();
+        }
+
+        existing.setFullName(incoming.getFullName());
+        existing.setEmail(incoming.getEmail());
+
+        UserEntity updated = service.update(existing);
+        return Response.ok(updated).build();
+    }
+
+    @Override
     public Response delete(Long id) {
         service.delete(id);
         return Response.noContent().build();

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Project</title>
+
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --primary: #4f46e5;
+            --danger: #dc2626;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        button.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .actions button {
+            margin-left: 6px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .status-NEW { color: #2563eb; }
+        .status-IN_PROGRESS { color: #d97706; }
+        .status-READY_FOR_TESTING { color: #9333ea; }
+        .status-IN_TESTING { color: #0284c7; }
+        .status-DONE { color: #16a34a; }
+        .status-FROZEN { color: #6b7280; }
+        .status-CLOSED { color: #dc2626; }
+    </style>
+</head>
+<body>
+
+<a href="index.html">← Назад к проектам</a>
+
+<div class="card">
+    <h1 id="projectTitle">Проект</h1>
+    <p class="muted">Список задач проекта</p>
+</div>
+
+<div class="card">
+    <h2>Новая задача</h2>
+    <div class="form">
+        <input id="taskTitle" placeholder="Название задачи">
+        <input id="taskDescription" placeholder="Описание задачи">
+        <select id="assigneeSelect"></select>
+        <button class="primary" onclick="createTask()">Создать</button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Задачи</h2>
+    <ul id="tasks"></ul>
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.4);">
+
+    <div style="
+        background:white;
+        padding:20px;
+        width:400px;
+        margin:100px auto;
+        border-radius:12px;">
+
+        <h3 id="modalTitle"></h3>
+
+        <p><b>Описание:</b></p>
+        <p id="modalDescription"></p>
+
+        <label>Статус:</label><br>
+        <select id="statusSelect">
+            <option value="NEW">NEW</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="READY_FOR_TESTING">READY_FOR_TESTING</option>
+            <option value="IN_TESTING">IN_TESTING</option>
+            <option value="DONE">DONE</option>
+            <option value="FROZEN">FROZEN</option>
+            <option value="CLOSED">CLOSED</option>
+        </select>
+        <button onclick="updateStatus()">Изменить</button>
+
+        <br><br>
+
+        <label>Исполнитель:</label><br>
+        <select id="assigneeUpdateSelect"></select>
+        <button onclick="updateAssignee()">Назначить</button>
+
+        <br><br>
+        <button onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<script>
+    const API = '/aks-lab-1/api/v1';
+    const projectId = new URLSearchParams(window.location.search).get('projectId');
+
+    let users = [];
+    let currentTaskId = null;
+
+    function loadProject() {
+        fetch(`${API}/projects/${projectId}`)
+            .then(r => r.json())
+            .then(p => projectTitle.textContent = p.name);
+    }
+
+    function loadUsers() {
+        fetch(`${API}/users`)
+            .then(r => r.json())
+            .then(data => {
+                users = data;
+                assigneeSelect.innerHTML = '';
+                users.forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value = u.id;
+                    opt.textContent = u.fullName;
+                    assigneeSelect.appendChild(opt);
+                });
+            });
+    }
+
+    function loadTasks() {
+        fetch(`${API}/tasks?projectId=${projectId}`)
+            .then(r => r.json())
+            .then(tasks => {
+                const ul = document.getElementById('tasks');
+                ul.innerHTML = '';
+
+                tasks.forEach(t => {
+                    const li = document.createElement('li');
+                    const assigneeName = t.assignee ? t.assignee.fullName : '—';
+
+                    li.innerHTML = `
+                        <span>
+                            <b>${t.title}</b>
+                            &nbsp;|&nbsp;
+                            <span class="status-${t.status}">${t.status}</span>
+                            &nbsp;|&nbsp;
+                            <span class="muted">${assigneeName}</span>
+                        </span>
+                    `;
+
+
+                    const actions = document.createElement('div');
+                    actions.className = 'actions';
+
+                    const view = document.createElement('button');
+                    view.textContent = 'Посмотреть';
+                    view.onclick = () => showTaskDetails(t);
+
+                    const del = document.createElement('button');
+                    del.textContent = 'Удалить';
+                    del.className = 'danger';
+                    del.onclick = () => deleteTask(t.id);
+
+                    actions.append(view, del);
+                    li.appendChild(actions);
+                    ul.appendChild(li);
+                });
+            });
+    }
+
+    function createTask() {
+        fetch(`${API}/tasks`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: taskTitle.value,
+                description: taskDescription.value,
+                projectId,
+                assigneeId: assigneeSelect.value
+            })
+        }).then(() => {
+            taskTitle.value = '';
+            taskDescription.value = '';
+            loadTasks();
+        });
+    }
+
+    function deleteTask(id) {
+        fetch(`${API}/tasks/${id}`, { method: 'DELETE' })
+            .then(loadTasks);
+    }
+
+    function showTaskDetails(task) {
+        currentTaskId = task.id;
+        modalTitle.textContent = task.title;
+        modalDescription.textContent = task.description || '—';
+        statusSelect.value = task.status;
+
+        assigneeUpdateSelect.innerHTML = '';
+        users.forEach(u => {
+            const opt = document.createElement('option');
+            opt.value = u.id;
+            opt.textContent = u.fullName;
+            if (task.assignee && u.id === task.assignee.id) opt.selected = true;
+            assigneeUpdateSelect.appendChild(opt);
+        });
+
+        modal.style.display = 'block';
+    }
+
+    function updateStatus() {
+        fetch(`${API}/tasks/${currentTaskId}/status`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ status: statusSelect.value })
+        }).then(() => {
+            closeModal();
+            loadTasks();
+        });
+    }
+
+    function updateAssignee() {
+        fetch(`${API}/tasks/${currentTaskId}/assignee`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ assigneeId: assigneeUpdateSelect.value })
+        }).then(() => {
+            closeModal();
+            loadTasks();
+        });
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    loadProject();
+    loadUsers();
+    loadTasks();
+</script>
+
+</body>
+</html>
